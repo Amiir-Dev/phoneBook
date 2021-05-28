@@ -134,7 +134,7 @@ use Hekmatinasser\Verta\Verta;
                             <td class="text-center"><?= $user->last_name ?></td>
                             <td>
                                 <button class="statusToggle active" user-id=<?= $user->id ?> style="margin : 5px 0px">مشاهده پروفایل</button>
-                                <button class="statusToggle" user-id=<?= $user->id ?> style="margin : 5px 0px">حذف</button>
+                                <button class="statusToggle" id="remove-user" user-name="<?= $user->first_name . " " . $user->last_name ?>" user-id=<?= $user->id ?> style="margin : 5px 0px"> حذف </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -167,40 +167,44 @@ use Hekmatinasser\Verta\Verta;
 
 
 
-    <!-- <script src="<?= BASE_URL ?>assets/js/jquery.min.js"></script> -->
+    <script src="<?= BASE_URL ?>view/assets/js/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         $(document).ready(function() {
-            $('.preview').click(function() {
-                $('.modal-overlay').fadeIn();
-                $('#mapWivdow').attr('src', '<?= BASE_URL ?>?loc=' + $(this).attr('data-loc'));
-            });
+            // $('.preview').click(function() {
+            //     $('.modal-overlay').fadeIn();
+            //     $('#mapWivdow').attr('src', '<?= BASE_URL ?>?loc=' + $(this).attr('data-loc'));
+            // });
 
-            $('.statusToggle').click(function() {
-                const btn = $(this);
-
-                $.ajax({
-                    url: '<?= BASE_URL . 'process/statusToggle.php' ?>',
-                    method: 'POST',
-                    data: {
-                        loc: btn.attr('data-loc'),
-                    },
-                    success: function(response) {
-                        if (response) {
-                            btn.toggleClass('active');
-                            if (btn.hasClass('active')) {
-                                btn.text('فعال');
-                            } else {
-                                btn.text('غیرفعال');
+            $('#remove-user').click(function(e) {
+                var user_id = $(this).attr('user-id');
+                var user_name = $(this).attr('user-name');
+                swal('آیا از حذف «' + user_name + '» از لیست مخاطبین مطمئن هستید!؟', "با تأئید شما، مخاطب بلافاصله حذف میگردد", "warning");
+                $('.swal-button--confirm').click(function(e) {
+                    $.ajax({
+                        url: "<?= BASE_URL . 'controller/process.php' ?>",
+                        method: 'POST',
+                        data: {
+                            action: 'remove',
+                            userID: user_id
+                        },
+                        success: function(response) {
+                            if (response) {
+                                swal("مخاطب موردنظر با موفقیت حذف شد", "", "success");
+                                // var loadUrl = 'http://localhost/7Learn.php/02-Project/phoneBook/';
+                                // $('.swal-button--confirm').click(function(e){
+                                //     $(".tabe-locations").html().load(window);
+                                // });
                             }
                         }
-
-                    }
+                    });
                 });
             });
 
-            $('.modal-overlay .close').click(function() {
-                $('.modal-overlay').fadeOut();
-            });
+            // $('.modal-overlay .close').click(function() {
+            //     $('.modal-overlay').fadeOut();
+            // });
         });
     </script>
 </body>
