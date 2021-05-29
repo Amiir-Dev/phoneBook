@@ -56,13 +56,13 @@
             margin: 0 3px;
         }
 
-        .statusToggle.active {
-            background: #0c8f10;
+        .statusToggle.profile {
+            background: #149999;
             color: #ffffff;
         }
 
         .statusToggle.all {
-            background: #007bec;
+            background: #149999;
             color: #ffffff;
         }
 
@@ -107,7 +107,8 @@
         <h1> دفترچه تلفن <span style="color:#007bec">کاربران</span></h1>
         <div class="box">
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
-            <a href="<?= site_url("?order=ASC") ?>" class="statusToggle all" href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>">مرتب سازی براساس حروف الفبا </a>
+            <a id="addNewUser" class="statusToggle all" style="background: #0c8f10"> + افزودن مخاطب جدید</a>
+            <a href="<?= site_url("?order=ASC") ?>" class="statusToggle all" style="background: #007bec;" href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>">مرتب سازی براساس حروف الفبا </a>
             <a href="<?= site_url("?order=DESC") ?>" class="statusToggle" href="<?= shapeSpace_add_var(current_site_url(), "order", "ASC") ?>"> مرتب سازی برخلاف حروف الفبا </a>
 
             <!---------- Search Box ---------->
@@ -118,12 +119,43 @@
             </div>
 
         </div>
+
+        <!---------- slideDown Tab For Adding User ---------->
+        <div class="userInfoTab">
+            <form id='addUserForm' action="<?= site_url("controller/add-process.php") ?>" method="post">
+                <div class="field-row">
+                    <div class="field-content">
+                        <input type="text" name='f-name' id="fName" placeholder="نام">
+                        <input type="text" name='l-name' id="lName" placeholder="نام خانوادگی">
+                        <input type="text" name='fa-name' id="faName" placeholder="نام پدر">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-content">
+                        <input type="submit" id="submit" value=" ثبت ">
+                        <input type="cancel" id="cancelClose" readonly value="انصراف">
+                    </div>
+                </div>
+
+                <div class=numbersSection>
+
+                </div>
+
+                <div class="ajax-result"></div>
+
+            </form>
+        </div>
+
+
+
+        <!---------- User listing Box ---------->
         <div class="box">
             <table class="tabe-locations">
                 <thead>
                     <tr>
-                        <th style="width:40%">نام</th>
-                        <th style="width:40%" class="text-center">نام خانوادگی</th>
+                        <th id="fname-list" style="width:40%">نام</th>
+                        <th id="lname-list" style="width:40%" class="text-center">نام خانوادگی</th>
                     </tr>
 
                 <tbody>
@@ -132,7 +164,7 @@
                             <td><?= $user->first_name ?></td>
                             <td class="text-center"><?= $user->last_name ?></td>
                             <td>
-                                <button class="statusToggle active" user-id=<?= $user->id ?> style="margin : 5px 0px">مشاهده پروفایل</button>
+                                <button id="showUserInfo" class="statusToggle profile" user-id=<?= $user->id ?> style="margin : 5px 0px">مشاهده پروفایل</button>
                                 <button class="statusToggle" id="remove-user" user-name="<?= $user->first_name . " " . $user->last_name ?>" user-id=<?= $user->id ?> style="margin : 5px 0px"> حذف </button>
                             </td>
                         </tr>
@@ -152,70 +184,7 @@
             </div>
 
         </div>
-
     </div>
-
-    <!---------- Start Modal Overlay ---------->
-    <!-- <div class="modal-overlay" style="height: auto; overflow-y: auto">
-        <div class="modal">
-            <span class="close">x</span>
-            <h3 class="modal-title">ثبت مشخصات</h3>
-            <div class="modal-content">
-                <form id='addUserForm' action="#" method="POST">
-
-                    <div class="field-row">
-                        <div class="field-title">نام</div>
-                        <div class="field-content">
-                            <input type="text" name="firstName" id='f-name'>
-                        </div>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field-title">نام خانوادگی</div>
-                        <div class="field-content">
-                            <input type="text" name="lastName" id='l-name'>
-                        </div>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field-title">نام پدر</div>
-                        <div class="field-content">
-                            <input type="text" name="fatherName" id='fa-name'>
-                        </div>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field-title">شماره تلفن</div>
-                        <div class="field-content">
-                            <input type="text" name="numberDefault" id='number-default'>
-                        </div>
-                    </div>
-
-                   Dynamic Fields Codes
-
-                    <div class="field-row">
-                        <div class="field-content">
-                            <input type="submit" value=" ثبت ">
-                        </div>
-                    </div>
-
-                    <div class="ajax-result"> محل نمایش نتیجه ثبت...</div>
-
-                </form>
-            </div>
-        </div>
-    </div> -->
-    <!---------- End Modal Overlay ---------->
-
-    <div class="modal-overlay" style="display: none;">
-        <div class="modal">
-            <span class="close">x</span>
-            <div class="modal-content">
-                <iframe id='mapWivdow' src="#" frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
-
 
 
     <script src="<?= BASE_URL ?>view/assets/js/jquery.min.js"></script>
@@ -223,10 +192,22 @@
 
     <script>
         $(document).ready(function() {
-            // $('.preview').click(function() {
-            //     $('.modal-overlay').fadeIn();
-            //     $('#mapWivdow').attr('src', '<?= BASE_URL ?>?loc=' + $(this).attr('data-loc'));
-            // });
+
+            $('#addNewUser').click(function(e) {
+                $('.userInfoTab').slideToggle();
+            });
+
+
+            $('#showUserInfo').click(function() {
+                $('.modal-overlay').fadeIn();
+                var First_Name = $('#fname-list');
+                var Last_Name = $('#lname-list');
+
+                $('input#f-name').val(First_Name);
+                $('input#l-name').val(Last_Name);
+                // $('input#fa-name');
+            });
+
 
             $('#remove-user').click(function(e) {
                 var user_id = $(this).attr('user-id');
@@ -272,9 +253,28 @@
                 });
             });
 
-            // $('.modal-overlay .close').click(function() {
-            //     $('.modal-overlay').fadeOut();
-            // });
+            $('input#cancelClose').click(function(e) {
+                $('.userInfoTab').slideToggle();
+            });
+
+
+            $('form#addUserForm').submit(function() {
+                e.preventDefault();
+                var form = $(this);
+                var resultTag = form.find('.ajax-result');
+                $.ajax({
+                    url: form.attr('action'),
+                    method: {
+                        action : "add",
+                        data: form.attr('method')
+                    },
+                    data: form.serialize(),
+                    success: function(response) {
+                        resultTag.html(response);
+                    }
+                });
+            });
+
         });
     </script>
 </body>
