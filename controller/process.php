@@ -11,24 +11,29 @@ include '../autoload.php';
 $action = $_POST['action'];
 
 $user_id = $_POST['userID'] ?? NULL;
+$keyword = $_POST['keyword'];
+$params = $_POST;
+
+if(!isset($keyword) or empty($keyword)){
+    die('نتیجه ای یافت نشد!');
+}
 
 $className = "{$action}User";
 $fileName = "{$action}User.php";
 
-// # Include Class File Manually 
-// $filePath = BASE_URL . "model/$fileName";
-// include $filePath;
-// // var_dump($filePath);
-// var_dump($className);
-
 if (class_exists($className)) {
     $user = new $className();
-    // var_dump($action);
-    echo $user->$action($user_id);
-    // var_dump($user->$action);
-    // var_dump($user);
-    // var_dump($user->$action);
+    $result = $user->$action($params);
 }
-else{
-    echo "class not exist";
+
+if(!sizeof($result)){
+    die('نتیجه ای یافت نشد!');
+}
+
+foreach($result as $res){
+    echo "<a href='#'>
+    <div class='result-item' user_id='$res->id'>
+    <span class='user-title'> $res->first_name $res->last_name</span>
+    </div>
+    </a>";
 }

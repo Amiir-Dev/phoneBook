@@ -9,7 +9,6 @@ use Hekmatinasser\Verta\Verta;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لیست مخاطبین</title>
-    <link href="favicon.png" rel="shortcut icon" type="image/png">
 
     <link rel="stylesheet" href="<?= BASE_URL ?>view/assets/css/style.css" />
 
@@ -114,7 +113,14 @@ use Hekmatinasser\Verta\Verta;
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
             <a href="<?= site_url("?order=ASC") ?>" class="statusToggle all" href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>">مرتب سازی براساس حروف الفبا </a>
             <a href="<?= site_url("?order=DESC") ?>" class="statusToggle" href="<?= shapeSpace_add_var(current_site_url(), "order", "ASC") ?>"> مرتب سازی برخلاف حروف الفبا </a>
-            <!-- <a class="statusToggle" href="?logout=1" style="float:left">خروج</a> -->
+            
+            <!---------- Search Box ---------->
+                <div class = "search-box-total">
+                    <input type="text" class="search-box" id="search" placeholder="جستجوی مخاطب ..." autocomplete="none">
+                    <div class="clear"></div>
+                    <div class="search-results" style="display : none">محمد حسین سیدمحسنی</div>
+                </div>
+
         </div>
         <div class="box">
             <table class="tabe-locations">
@@ -122,9 +128,6 @@ use Hekmatinasser\Verta\Verta;
                     <tr>
                         <th style="width:40%">نام</th>
                         <th style="width:40%" class="text-center">نام خانوادگی</th>
-                        <!-- <th style="width:10%" class="text-center">lat</th>
-                        <th style="width:10%" class="text-center">lng</th>
-                        <th style="width:25%">وضعیت</th> -->
                     </tr>
 
                 <tbody>
@@ -202,6 +205,24 @@ use Hekmatinasser\Verta\Verta;
                 });
             });
 
+
+            $('input#search').keyup(function(e) {
+                var input = $(this);
+                var searchResult = $('.search-results');
+                searchResult.html('در حال جستجو ...');
+
+                $.ajax({
+                    url: "<?= BASE_URL . 'controller/process.php' ?>",
+                    method: 'POST',
+                    data: {
+                        action: 'search',
+                        keyword: input.val()
+                    },
+                    success: function(response) {
+                        searchResult.slideDown().html(response);
+                    }
+                });
+            });
             // $('.modal-overlay .close').click(function() {
             //     $('.modal-overlay').fadeOut();
             // });

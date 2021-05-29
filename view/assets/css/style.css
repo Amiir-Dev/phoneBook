@@ -64,23 +64,6 @@ body,
     z-index: 999;
 }
 
-.head #search {
-    float: right;
-    margin-right: 50px;
-    text-align: right;
-    border: 1px solid #d8d6d2;
-    border-radius: 5px;
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 10px;
-    padding: 10px 20px;
-    direction: rtl;
-    font-family: sahel;
-    opacity: 0.9;
-    outline: 0;
-    width: 400px;
-}
-
 
 /* Modal Overlay Styles */
 
@@ -185,7 +168,7 @@ input[type="submit"]:hover {
 }
 
 
-/* PAgination */
+/* Pagination */
 
 .pagination {
     text-align: center;
@@ -235,22 +218,54 @@ a.pn:hover {
     clear: both;
 }
 
-.search-box {
+.search-box-total {
     width: fit-content;
+    float: left;
+    margin-top: -5px;
+}
+
+.search-box {
+    text-align: right;
+    border: 1px solid #d8d6d2;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 30px;
+    padding: 2px 8px;
+    direction: rtl;
+    font-family: sahel;
+    opacity: 0.9;
+    outline: 0;
+    width: 200px;
 }
 
 .search-results a {
     text-decoration: none;
     color: #333;
     font-weight: normal;
+    /* width: 100px; */
 }
 
 .search-results {
-    margin: -3px 50px 0 0;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 10px 12px;
-    border-radius: 0 0 10px 10px;
+    color: #000;
+    text-align: right;
+    margin-top: -1px;
     border: 1px solid #d9d7d4;
+    border-radius: 0 0 10px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 30px;
+    padding: 2px 8px;
+    direction: rtl;
+    font-family: sahel;
+    opacity: 0.9;
+    outline: 0;
+    width: 200px;
+    background: rgba(255, 255, 255, 0.9);
+    position: absolute;
+    overflow: scroll;
+    height: auto;
+    max-height: 450px
 }
 
 .result-item {
@@ -269,7 +284,7 @@ a.pn:hover {
     display: inline-block;
 }
 
-.result-item span.loc-type {
+.result-item span.user-type {
     background: #149999;
     color: #fff;
     padding: 0px 7px 2px 7px;
@@ -277,23 +292,6 @@ a.pn:hover {
     font-size: 13px;
 }
 
-.result-item span.loc-title {
+.result-item span.user-title {
     font-size: 15px;
-}
-
-img.currentLoc {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 999;
-    width: 32px;
-    background: rgba(242, 209, 99, 0.8);
-    padding: 7px;
-    border-radius: 30px;
-    box-shadow: 1px 2px 13px #777;
-}
-
-img.currentLoc:hover {
-    cursor: pointer;
-    opacity: 0.7;
 }
