@@ -1,8 +1,7 @@
 <?php
 
 include 'user.php';
-// echo "this is class File" . PHP_EOL;
-
+    
 class removeUser extends user
 {
     private $userID;

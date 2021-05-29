@@ -1,7 +1,6 @@
 <?php
 
 include 'user.php';
-// echo "recieve in searchUser file";
 
 class searchUser extends user
 {
@@ -10,7 +9,7 @@ class searchUser extends user
 
     public function search($params)
     {
-        $this->keyword = $params['keyword'];
+        $this->keyword = $params;
 
         if (isset($params)) {
             $this->condition = "WHERE first_name LIKE '%{$this->keyword}%' OR last_name LIKE '%{$this->keyword}%'";

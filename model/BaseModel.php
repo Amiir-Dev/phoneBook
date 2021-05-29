@@ -1,5 +1,4 @@
 <?php
-
 class DBConnection extends PDO
 {
     private static $host = '127.0.0.1';
