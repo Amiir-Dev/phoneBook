@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لیست مخاطبین</title>
-
     <link rel="stylesheet" href="<?= BASE_URL ?>view/assets/css/style.css" />
 
     <style>
@@ -108,8 +107,12 @@
         <div class="box">
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
             <a id="addNewUser" class="statusToggle all" style="background: #0c8f10"> + افزودن مخاطب جدید</a>
-            <a href="<?= site_url("?order=ASC") ?>" class="statusToggle all" style="background: #007bec;" href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>">مرتب سازی براساس حروف الفبا </a>
-            <a href="<?= site_url("?order=DESC") ?>" class="statusToggle" href="<?= shapeSpace_add_var(current_site_url(), "order", "ASC") ?>"> مرتب سازی برخلاف حروف الفبا </a>
+
+            <a href="<?= site_url("?order=ASC") ?>" id="sortASC" class="statusToggle all" style="background: #007bec;" >مرتب سازی براساس حروف الفبا </a>
+            <!-- href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>" -->
+
+            <a href="<?= site_url("?order=DESC") ?>" id="sortDESC" class="statusToggle"> مرتب سازی برخلاف حروف الفبا </a>
+            <!-- href="<?= shapeSpace_add_var(current_site_url(), "order", "ASC") ?>" -->
 
             <!---------- Search Box ---------->
             <div class="search-box-total">
@@ -158,19 +161,9 @@
                         <th id="lname-list" style="width:40%" class="text-center">نام خانوادگی</th>
                     </tr>
 
-                <tbody>
-                    <?php foreach ($users as $user) : ?>
-                        <tr>
-                            <td><?= $user->first_name ?></td>
-                            <td class="text-center"><?= $user->last_name ?></td>
-                            <td>
-                                <button id="showUserInfo" class="statusToggle profile" user-id=<?= $user->id ?> style="margin : 5px 0px">مشاهده پروفایل</button>
-                                <button class="statusToggle" id="remove-user" user-name="<?= $user->first_name . " " . $user->last_name ?>" user-id=<?= $user->id ?> style="margin : 5px 0px"> حذف </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                <tbody id="tbody"></tbody>
             </table>
+
 
             <!---------- Pagination ---------->
             <div class=pagination>
@@ -186,16 +179,31 @@
         </div>
     </div>
 
-
     <script src="<?= BASE_URL ?>view/assets/js/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+
     <script>
+        function displayUsers(param) {
+            var param = param;
+            $.ajax({
+                url: "<?= BASE_URL . 'controller/get-process.php' ?>",
+                method: 'POST',
+                data: {
+                    action: "get",
+                    data: param
+                },
+                success: function(response) {
+                    document.getElementById("tbody").innerHTML = response;
+                }
+            });
+        }
+        displayUsers();
+
+
         $(document).ready(function() {
 
-            $('#addNewUser').click(function(e) {
-                $('.userInfoTab').slideToggle();
-            });
+
 
 
             $('#showUserInfo').click(function() {
@@ -205,7 +213,6 @@
 
                 $('input#f-name').val(First_Name);
                 $('input#l-name').val(Last_Name);
-                // $('input#fa-name');
             });
 
 
@@ -223,11 +230,8 @@
                         },
                         success: function(response) {
                             if (response) {
+                                displayUsers();
                                 swal("مخاطب موردنظر با موفقیت حذف شد", "", "success");
-                                // var loadUrl = 'http://localhost/7Learn.php/02-Project/phoneBook/';
-                                // $('.swal-button--confirm').click(function(e){
-                                //     $(".tabe-locations").html().load(window);
-                                // });
                             }
                         }
                     });
@@ -253,26 +257,40 @@
                 });
             });
 
+
+            $('#addNewUser').click(function() {
+                $('.userInfoTab').slideToggle();
+            });
+
+
             $('input#cancelClose').click(function(e) {
                 $('.userInfoTab').slideToggle();
             });
 
 
-            $('form#addUserForm').submit(function() {
+            $('form#addUserForm').submit(function(e) {
                 e.preventDefault();
                 var form = $(this);
                 var resultTag = form.find('.ajax-result');
                 $.ajax({
                     url: form.attr('action'),
-                    method: {
-                        action : "add",
-                        data: form.attr('method')
-                    },
+                    method: form.attr('method'),
                     data: form.serialize(),
                     success: function(response) {
-                        resultTag.html(response);
+                        displayUsers();
+                        swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
+                        $('.userInfoTab').slideToggle();
                     }
                 });
+            });
+
+            $('#sortDESC').click(function(e) {
+                e.preventDefault();
+                displayUsers("DESC");
+            });
+            $('#sortASC').click(function(e) {
+                e.preventDefault();
+                displayUsers("ASC");
             });
 
         });

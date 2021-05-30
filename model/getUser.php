@@ -2,11 +2,11 @@
 
 include 'user.php';
 
-class getUserList extends user
+class getUser extends user
 {
     # Order Conditions
     private $orderBy;
-    private $_order ;
+    private $_order;
     private $rowInEveryPage;
     private $page;
     private $numPage;
@@ -22,20 +22,26 @@ class getUserList extends user
         return $this->rowInEveryPage;
     }
 
-    public function getUserData()
+    public function get($params)
     {
         #set default
         $this->order = "created_at DESC";
+
+        if (in_array($params['data'], ["ASC", "DESC"])) {
+            $this->orderBy = $params['data'];
+
+            if (isset($this->orderBy)) {
+                $this->order = "last_name $this->orderBy";
+            }
+        }
         
-        $this->page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $this->page = is_numeric($params['data']) ? $params['data'] : 1;
 
         $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
+        // $this->page = isset($_GET['page']) ? $_GET['page'] : 1;
 
-        $this->orderBy  = $_GET['order'];
+        // $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
 
-        if (isset($this->orderBy)) {
-            $this->order = "last_name $this->orderBy";
-        }
 
         $limitation = "LIMIT $this->numPage ," . TASK_EVERY_PAGE;
 

@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 include BASE_PATH . 'autoload.php';
 
-$action = $_POST['action'];
-$params = $_POST['data'];
+$action = "add";
+$params = $_POST;
 
 if (!isset($params) or empty($params)) {
     die("پرکردن تمامی فیلدها الزامی است!");
@@ -22,9 +22,4 @@ if (class_exists($className)) {
     $result = (new $className())->$action($params);
 }
 
-if($result){
-    echo "مخاطب موردنظر با موفقیت افزوده شد";
-}
-else{
-    echo "مشکلی در ثبت مخاطب موردنظر پیش آمده، مجدداً تلاش کنید!";
-}
+return $result;
