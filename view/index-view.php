@@ -108,7 +108,7 @@
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
             <a id="addNewUser" class="statusToggle all" style="background: #0c8f10"> + افزودن مخاطب جدید</a>
 
-            <a href="<?= site_url("?order=ASC") ?>" id="sortASC" class="statusToggle all" style="background: #007bec;" >مرتب سازی براساس حروف الفبا </a>
+            <a href="<?= site_url("?order=ASC") ?>" id="sortASC" class="statusToggle all" style="background: #007bec;">مرتب سازی براساس حروف الفبا </a>
             <!-- href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>" -->
 
             <a href="<?= site_url("?order=DESC") ?>" id="sortDESC" class="statusToggle"> مرتب سازی برخلاف حروف الفبا </a>
@@ -160,7 +160,14 @@
                         <th id="fname-list" style="width:40%">نام</th>
                         <th id="lname-list" style="width:40%" class="text-center">نام خانوادگی</th>
                     </tr>
-
+                    <tr>
+                        <td id="showUserFName"></td>
+                        <td id="showUserLName" class='text-center'></td>
+                        <td>
+                            <button id='showUserInfo' class='statusToggle profile' style='margin : 5px 0px'>مشاهده پروفایل</button>
+                            <button class='statusToggle' id='remove-user' style='margin : 5px 0px'> حذف </button>
+                        </td>
+                    </tr>
                 <tbody id="tbody"></tbody>
             </table>
 
@@ -194,7 +201,15 @@
                     data: param
                 },
                 success: function(response) {
-                    document.getElementById("tbody").innerHTML = response;
+                    response.forEach(function(user){
+                        // console.log(user.id);
+                        document.getElementById("showUserFName").innerHTML = user.first_name;
+                        document.getElementById("showUserLName").innerHTML = user.last_name;
+                        document.getElementById("showUserInfo").setAttribute("user-id", user.id);
+                        document.getElementById("remove-user").setAttribute("user-name", user.first_name + " "+ user.last_name);
+                        document.getElementById("remove-user").setAttribute("user-id", user.id);
+                    });
+                    
                 }
             });
         }
@@ -206,14 +221,14 @@
 
 
 
-            $('#showUserInfo').click(function() {
-                $('.modal-overlay').fadeIn();
-                var First_Name = $('#fname-list');
-                var Last_Name = $('#lname-list');
+            // $('#showUserInfo').click(function() {
+            //     $('.modal-overlay').fadeIn();
+            //     var First_Name = $('#fname-list');
+            //     var Last_Name = $('#lname-list');
 
-                $('input#f-name').val(First_Name);
-                $('input#l-name').val(Last_Name);
-            });
+            //     $('input#f-name').val(First_Name);
+            //     $('input#l-name').val(Last_Name);
+            // });
 
 
             $('#remove-user').click(function(e) {

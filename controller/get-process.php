@@ -20,15 +20,18 @@ if (class_exists($className)) {
     $result = (new $className())->$action($params);
 }
 
+header('Content-Type: application/json');
+echo json_encode($result);
 
-foreach ($result as $user){
-    echo 
-    "<tr>
-        <td> $user->first_name </td>
-        <td class='text-center'> $user->last_name </td>
-        <td>
-            <button id='showUserInfo' class='statusToggle profile' user-id= $user->id  style='margin : 5px 0px'>مشاهده پروفایل</button>
-            <button class='statusToggle' id='remove-user' user-name= $user->first_name $user->last_name  user-id= $user->id  style='margin : 5px 0px'> حذف </button>
-        </td>
-    </tr>";
-}
+
+// foreach ($result as $user){
+//     echo 
+//     "<tr>
+//         <td> $user->first_name </td>
+//         <td class='text-center'> $user->last_name </td>
+//         <td>
+//             <button id='showUserInfo' class='statusToggle profile' user-id= $user->id  style='margin : 5px 0px'>مشاهده پروفایل</button>
+//             <button class='statusToggle' id='remove-user' user-name= $user->first_name $user->last_name  user-id= $user->id  style='margin : 5px 0px' href = '#'> حذف </button>
+//         </td>
+//     </tr>";
+// }
