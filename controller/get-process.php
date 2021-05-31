@@ -1,9 +1,6 @@
 <?php
 
-// echo "get-process FILE";
 include "../Base/constants.php";
-// include BASE_PATH . "model/getUser.php";
-// include BASE_PATH . "model/findUser.php";
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     return;

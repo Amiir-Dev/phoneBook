@@ -64,49 +64,6 @@ body,
     z-index: 999;
 }
 
-
-/* Modal Overlay Styles */
-
-
-/* .modal-overlay {
-    position: fixed;
-    z-index: 999;
-    background: rgba(0, 0, 0, 0.7);
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.modal-overlay .modal {
-    width: 50%;
-    background: #fff;
-    padding: 20px;
-    border-radius: 7px;
-    margin-top: -100px;
-    position: relative;
-}
-
-.modal-overlay .modal .close {
-    position: absolute;
-    top: 7px;
-    left: 15px;
-    color: #a90909;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.modal-overlay .modal h3.modal-title {
-    padding: 0;
-    margin: 0 0 30px 0;
-}
-
-.modal-overlay .modal h3.modal-content {} */
-
 .userInfoTab {
     background-color: #fff;
     padding: 5px 10px;

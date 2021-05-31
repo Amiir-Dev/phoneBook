@@ -28,7 +28,6 @@ class getUser extends user
         #set default
         $this->order = "created_at DESC";
 
-        // if (in_array($params[0], ["ASC", "DESC"])) {
         if (in_array($params[0], ["ASC", "DESC"])) {
             $this->orderBy = $params[0];
 
@@ -37,7 +36,6 @@ class getUser extends user
             }
         }
         $this->page = is_numeric($params[1]) ? $params[1] : 1;
-        // $this->page = 1;
 
         $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
 
