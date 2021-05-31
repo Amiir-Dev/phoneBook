@@ -1,5 +1,6 @@
 <?php
-class DBConnection extends PDO
+// namespace Model;
+class BaseModel extends PDO
 {
     private static $host = '127.0.0.1';
     private static $dbName = 'phoneBook';

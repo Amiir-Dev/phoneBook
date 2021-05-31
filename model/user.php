@@ -1,12 +1,14 @@
 <?php
 include "BaseModel.php";
 
-class user extends DBConnection
+// use Model\BaseModel;
+
+class user extends BaseModel
 {
     public $conn;
     public function __construct()
     {
-        $this->conn = DBConnection::connect();
+        $this->conn = BaseModel::connect();
     }
 }
 

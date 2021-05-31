@@ -2,16 +2,15 @@
 
 include "Base/constants.php";
 include "Base/helper.php";
-include "model/getUserList.php";
 
-$params = $_GET ?? [];
+// $params = $_GET ?? [];
 
-$rows = (new getUserList())->pagination();
+// $rows = (new getUserList())->pagination();
 
-if (!isset($_GET['page'])) {
-    $_GET['page'] = 1;
-}
+// if (!isset($_GET['page'])) {
+//     $_GET['page'] = 1;
+// }
 
-$users = (new getUserList())->getUserData();
+// $users = (new getUserList())->getUserData();
 
 include "view/index-view.php";

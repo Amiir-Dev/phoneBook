@@ -1,6 +1,6 @@
 <?php
 include "../Base/constants.php";
-include BASE_PATH . "model/addUser.php";
+// include BASE_PATH . "model/addUser.php";
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     return;

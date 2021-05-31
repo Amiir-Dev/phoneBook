@@ -53,11 +53,13 @@
             font-family: sahel;
             display: inline-block;
             margin: 0 3px;
+            margin: 5px 3px
         }
 
         .statusToggle.profile {
             background: #149999;
             color: #ffffff;
+            margin: 5px 0px
         }
 
         .statusToggle.all {
@@ -90,11 +92,6 @@
             padding: 0 5px;
         }
 
-        iframe#mapWivdow {
-            width: 100%;
-            height: 500px;
-        }
-
         .text-center {
             text-align: center;
         }
@@ -105,14 +102,12 @@
     <div class="main-panel">
         <h1> دفترچه تلفن <span style="color:#007bec">کاربران</span></h1>
         <div class="box">
+            <!---------- Header Box ---------->
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
             <a id="addNewUser" class="statusToggle all" style="background: #0c8f10"> + افزودن مخاطب جدید</a>
-
             <a href="<?= site_url("?order=ASC") ?>" id="sortASC" class="statusToggle all" style="background: #007bec;">مرتب سازی براساس حروف الفبا </a>
-            <!-- href="<?= shapeSpace_add_var(current_site_url(), "order", "DESC") ?>" -->
-
             <a href="<?= site_url("?order=DESC") ?>" id="sortDESC" class="statusToggle"> مرتب سازی برخلاف حروف الفبا </a>
-            <!-- href="<?= shapeSpace_add_var(current_site_url(), "order", "ASC") ?>" -->
+
 
             <!---------- Search Box ---------->
             <div class="search-box-total">
@@ -120,7 +115,6 @@
                 <div class="clear"></div>
                 <div class="search-results" style="display : none"></div>
             </div>
-
         </div>
 
         <!---------- slideDown Tab For Adding User ---------->
@@ -144,43 +138,31 @@
                 <div class=numbersSection>
 
                 </div>
-
-                <div class="ajax-result"></div>
-
             </form>
         </div>
 
 
 
-        <!---------- User listing Box ---------->
+        <!---------- Users Data Box---------->
         <div class="box">
+            <!---------- Users Data ---------->
             <table class="tabe-locations">
-                <thead>
+                <thead id="thead">
                     <tr>
                         <th id="fname-list" style="width:40%">نام</th>
                         <th id="lname-list" style="width:40%" class="text-center">نام خانوادگی</th>
                     </tr>
-                    <tr>
-                        <td id="showUserFName"></td>
-                        <td id="showUserLName" class='text-center'></td>
-                        <td>
-                            <button id='showUserInfo' class='statusToggle profile' style='margin : 5px 0px'>مشاهده پروفایل</button>
-                            <button class='statusToggle' id='remove-user' style='margin : 5px 0px'> حذف </button>
-                        </td>
-                    </tr>
-                <tbody id="tbody"></tbody>
+                    <!-- Users Added Here by Js -->
             </table>
 
 
             <!---------- Pagination ---------->
-            <div class=pagination>
-                <a href="<?= shapeSpace_add_var(current_site_url(), 'page', $_GET['page'] - 1) ?>" class="<?= $_GET['page'] == 1 ? 'pn-active' : 'pn' ?>"> &laquo; </a>
+            <div id="pagination-space" class=pagination>
 
-                <?php for ($i = 1; $i <= $rows; $i++) : ?>
-                    <a class=" <?= $_GET['page'] == $i ? 'pn-active' : 'pn' ?> " href="<?= shapeSpace_add_var(current_site_url(), 'page', $i) ?>"> <?= $i ?> </a>
-                <?php endfor; ?>
+                <a href=" <?= site_url("?page=" . $_GET['page'] - 1) ?>" class="<?= $_GET['page'] == 1 ? 'pn-active' : 'pn' ?>"> &laquo; </a>
+                <span id="innerpageNumbers"></span>
+                <a href="<?= site_url("?page=" . $_GET['page'] + 1) ?>" class="<?= $_GET['page'] == $rows ? 'pn-active' : 'pn' ?>"> &raquo; </a>
 
-                <a href="<?= shapeSpace_add_var(current_site_url(), 'page', $_GET['page'] + 1) ?>" class="<?= $_GET['page'] == $rows ? 'pn-active' : 'pn' ?>"> &raquo; </a>
             </div>
 
         </div>
@@ -198,42 +180,118 @@
                 method: 'POST',
                 data: {
                     action: "get",
-                    data: param
+                    data: param,
                 },
                 success: function(response) {
-                    response.forEach(function(user){
-                        // console.log(user.id);
-                        document.getElementById("showUserFName").innerHTML = user.first_name;
-                        document.getElementById("showUserLName").innerHTML = user.last_name;
-                        document.getElementById("showUserInfo").setAttribute("user-id", user.id);
-                        document.getElementById("remove-user").setAttribute("user-name", user.first_name + " "+ user.last_name);
-                        document.getElementById("remove-user").setAttribute("user-id", user.id);
+                    response.forEach(function(user) {
+                        createItems(user)
                     });
-                    
                 }
             });
         }
         displayUsers();
 
 
+        function createItems(user) {
+            let parentTd = document.createElement('tr');
+
+            let tdFirstName = document.createElement('td');
+
+            let tdLastName = document.createElement('td');
+            tdLastName.classList.add('text-center');
+
+
+            let parenetBottonTDs = document.createElement('td');
+
+            let showProfileBtn = document.createElement('button');
+            showProfileBtn.innerHTML = 'مشاهده پروفایل';
+            showProfileBtn.classList.add('statusToggle');
+            showProfileBtn.classList.add('profile');
+            showProfileBtn.classList.add('showUserProfile');
+            showProfileBtn.setAttribute('user-id', user.id);
+
+            let deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = 'حذف';
+            // deleteBtn.setAttribute('id', 'removeUserBtn');
+            deleteBtn.classList.add('statusToggle');
+            deleteBtn.classList.add('deleteUserProfile');
+            deleteBtn.setAttribute('user-id', user.id);
+
+            let thead = document.getElementById('thead');
+
+            tdFirstName.innerHTML = user.first_name;
+            tdLastName.innerHTML = user.last_name;
+            parentTd.appendChild(tdFirstName);
+            parentTd.appendChild(tdLastName);
+
+            parenetBottonTDs.appendChild(showProfileBtn);
+            parenetBottonTDs.appendChild(deleteBtn);
+
+            // showProfileBtn.onclick = showProfile
+            deleteBtn.onclick = delete
+
+            parentTd.appendChild(parenetBottonTDs);
+
+            thead.appendChild(parentTd);
+        }
+
+
+        // ---> Paginations Functions
+        function paginationCounter() {
+            $.ajax({
+                url: "<?= BASE_URL . 'controller/pagination-process.php' ?>",
+                method: 'POST',
+                data: '',
+                success: function(response) {
+                    // console.log(response);
+                    for (page = 1; page <= response; page++) {
+                        // console.log(page);
+                        createPagination(page);
+                    };
+                }
+            });
+        }
+        paginationCounter();
+
+        function createPagination(pages) {
+            let PageNumberBtn = document.createElement('a');
+            let pageLink = "http://localhost/7Learn.php/02-Project/phoneBook/?page=" + pages;
+
+            PageNumberBtn.href = pageLink;
+            PageNumberBtn.classList.add("pn");
+            PageNumberBtn.innerHTML = pages;
+
+
+
+            let pageNumberSpace = document.getElementById("innerpageNumbers");
+            pageNumberSpace.appendChild(PageNumberBtn);
+        }
+
+        // function showProfile(event) {
+
+        // }
+
+        // function showProfile(event){
+
+        // }
+
         $(document).ready(function() {
 
+            $('.showUserProfile').click(function() {
+                $('.userInfoTab').slideToggle();
 
+                // var First_Name = $('#fname-list');
+                // var Last_Name = $('#lname-list');
 
+                // $('input#f-name').val(First_Name);
+                // $('input#l-name').val(Last_Name);
+            });
 
-            // $('#showUserInfo').click(function() {
-            //     $('.modal-overlay').fadeIn();
-            //     var First_Name = $('#fname-list');
-            //     var Last_Name = $('#lname-list');
-
-            //     $('input#f-name').val(First_Name);
-            //     $('input#l-name').val(Last_Name);
-            // });
-
-
-            $('#remove-user').click(function(e) {
+            document.getElementsByClassName('deleteUserProfile')[0];
+            $().click(function(e) {
+                alert("yes");
                 var user_id = $(this).attr('user-id');
-                var user_name = $(this).attr('user-name');
+                // var user_name = $(this).innerHTML();
                 swal('آیا از حذف «' + user_name + '» از لیست مخاطبین مطمئن هستید!؟', "با تأئید شما، مخاطب بلافاصله حذف میگردد", "warning");
                 $('.swal-button--confirm').click(function(e) {
                     $.ajax({
@@ -286,7 +344,6 @@
             $('form#addUserForm').submit(function(e) {
                 e.preventDefault();
                 var form = $(this);
-                var resultTag = form.find('.ajax-result');
                 $.ajax({
                     url: form.attr('action'),
                     method: form.attr('method'),
@@ -306,6 +363,13 @@
             $('#sortASC').click(function(e) {
                 e.preventDefault();
                 displayUsers("ASC");
+            });
+
+            $('#pagination-space').click(function(e) {
+                let params = window.location.search;
+                // e.preventDefault();
+                // console.log(params);
+                displayUsers(params);
             });
 
         });

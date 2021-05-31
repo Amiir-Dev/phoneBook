@@ -24,6 +24,7 @@ class getUser extends user
 
     public function get($params)
     {
+        
         #set default
         $this->order = "created_at DESC";
 
@@ -34,13 +35,13 @@ class getUser extends user
                 $this->order = "last_name $this->orderBy";
             }
         }
-        
-        $this->page = is_numeric($params['data']) ? $params['data'] : 1;
+        // echo $params['data'];
+        $p = explode("?page=",$params['data']);
+        // $this->page = is_numeric($params['data']) ? $params['data'] : 1;
+        // $this->page = is_numeric($p[0]) ? $p[0] : 1;
+        $this->page = 3;
 
         $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
-        // $this->page = isset($_GET['page']) ? $_GET['page'] : 1;
-
-        // $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
 
 
         $limitation = "LIMIT $this->numPage ," . TASK_EVERY_PAGE;
