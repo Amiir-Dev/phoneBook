@@ -28,8 +28,9 @@ class getUser extends user
         #set default
         $this->order = "created_at DESC";
 
+        // if (in_array($params[0], ["ASC", "DESC"])) {
         if (in_array($params[0], ["ASC", "DESC"])) {
-            $this->orderBy = $params['data'];
+            $this->orderBy = $params[0];
 
             if (isset($this->orderBy)) {
                 $this->order = "last_name $this->orderBy";

@@ -105,8 +105,10 @@
             <!---------- Header Box ---------->
             <a class="statusToggle" href="<?= BASE_URL ?>">🏠</a>
             <a id="addNewUser" class="statusToggle all" style="background: #0c8f10"> + افزودن مخاطب جدید</a>
-            <a href="<?= site_url("?order=ASC") ?>" id="sortASC" class="statusToggle all" style="background: #007bec;">مرتب سازی براساس حروف الفبا </a>
-            <a href="<?= site_url("?order=DESC") ?>" id="sortDESC" class="statusToggle"> مرتب سازی برخلاف حروف الفبا </a>
+            <a id="sortASC" class="statusToggle all" style="background: #007bec;">مرتب سازی براساس حروف الفبا </a>
+            <!-- href="<?= site_url("?order=ASC") ?>" -->
+            <a id="sortDESC" class="statusToggle"> مرتب سازی برخلاف حروف الفبا </a>
+            <!-- href="<?= site_url("?order=DESC") ?>" -->
 
 
             <!---------- Search Box ---------->
@@ -132,8 +134,10 @@
 
                 <div class="field-row">
                     <div class="field-content">
-                        <input type="submit" id="submit" value=" ثبت ">
+                        <input type="hiden" id="submit" value=" ثبت " d: visible>
                         <input type="cancel" id="cancelClose" readonly value="انصراف">
+                        <input type="hidden" id="edit" readonly value="ویرایش">
+
                     </div>
                 </div>
 
@@ -149,22 +153,26 @@
         <div class="box">
             <!---------- Users Data ---------->
             <table class="tabe-locations">
-                <thead id="thead">
+                <thead>
                     <tr>
                         <th id="fname-list" style="width:40%">نام</th>
                         <th id="lname-list" style="width:40%" class="text-center">نام خانوادگی</th>
                     </tr>
+                </thead>
+
+                <thead id="thead">
                     <!-- Users Added Here by Js -->
+                </thead>
             </table>
 
 
             <!---------- Pagination ---------->
             <div id="pagination-space" class=pagination>
 
-                <a href=" <?= site_url("?page=" . $_GET['page'] - 1) ?>" class="<?= $_GET['page'] == 1 ? 'pn-active' : 'pn' ?>"> &laquo; </a>
+                <!-- <a href=" <?= site_url("?page=" . $_GET['page'] - 1) ?>" class="<?= $_GET['page'] == 1 ? 'pn-active' : 'pn' ?>"> &laquo; </a> -->
+                <a href=" <?= site_url("?page=" . $_GET['page'] - 1) ?>" class="pn"> &laquo; </a>
                 <span id="innerpageNumbers"></span>
-                <a href="<?= site_url("?page=" . $_GET['page'] + 1) ?>" class="<?= $_GET['page'] == $rows ? 'pn-active' : 'pn' ?>"> &raquo; </a>
-
+                <a href="<?= site_url("?page=" . $_GET['page'] + 1) ?>" class="pn"> &raquo; </a>
             </div>
 
         </div>
@@ -173,8 +181,10 @@
     <script src="<?= BASE_URL ?>view/assets/js/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
     <script>
+        displayUsers();
+        paginationCounter();
+
         function getpageNum() {
             return <?= $_GET['page'] ?>;
         }
@@ -191,14 +201,12 @@
                     data: param,
                 },
                 success: function(response) {
-                    // console.log(response);
                     response.forEach(function(user) {
                         createItems(user)
                     });
                 }
             });
         }
-        displayUsers();
 
 
         function createItems(user) {
@@ -209,21 +217,19 @@
             let tdLastName = document.createElement('td');
             tdLastName.classList.add('text-center');
 
-
-            let parenetBottonTDs = document.createElement('td');
+            let parenetBottonTDs = document.createElement('tr');
 
             let showProfileBtn = document.createElement('button');
             showProfileBtn.innerHTML = 'مشاهده پروفایل';
+            showProfileBtn.id = "showUserProfile";
             showProfileBtn.classList.add('statusToggle');
             showProfileBtn.classList.add('profile');
-            showProfileBtn.classList.add('showUserProfile');
             showProfileBtn.setAttribute('user-id', user.id);
 
             let deleteBtn = document.createElement('button');
             deleteBtn.innerHTML = 'حذف';
-            // deleteBtn.setAttribute('id', 'removeUserBtn');
+            deleteBtn.id = "removeSelectedUser";
             deleteBtn.classList.add('statusToggle');
-            deleteBtn.classList.add('deleteUserProfile');
             deleteBtn.setAttribute('user-id', user.id);
 
             let thead = document.getElementById('thead');
@@ -236,19 +242,17 @@
             parenetBottonTDs.appendChild(showProfileBtn);
             parenetBottonTDs.appendChild(deleteBtn);
 
-            showProfileBtn.onclick = showSelectedUser(user.id);
-            deleteBtn.onclick = removeSelectedUser();
 
             parentTd.appendChild(parenetBottonTDs);
 
             thead.appendChild(parentTd);
         }
 
-        function showSelectedUser(e) {
-            // console.log(e);
-        }
 
-        function removeSelectedUser() {};
+        function deleteItems() {
+            let dataStruct = document.getElementById("thead");
+            dataStruct.remove();
+        }
 
 
         // ---> Paginations Functions
@@ -264,7 +268,7 @@
                 }
             });
         }
-        paginationCounter();
+
 
         function createPagination(pages) {
             let PageNumberBtn = document.createElement('a');
@@ -285,34 +289,62 @@
         // -------------- Document Ready ---------------
         $(document).ready(function(event) {
 
-            $('.showUserProfile').click(function(e) {
-                alert("showUserProfile")
-                $('#fName').val();
-                $('.userInfoTab').slideToggle();
-
-            });
-
-            $('.deleteUserProfile').click(function(e) {
-                alert("deleteUserProfile");
-                // var user_id = $(this).attr('user-id');
-                swal('آیا از حذف «' + user_name + '» از لیست مخاطبین مطمئن هستید!؟', "با تأئید شما، مخاطب بلافاصله حذف میگردد", "warning");
-                $('.swal-button--confirm').click(function(e) {
+            window.onload = function() {
+                $('#showUserProfile').click(function(e) {
+                    var user_id = $(this).attr('user-id');
+                    // $('.userInfoTab').slideToggle();
                     $.ajax({
-                        url: "<?= BASE_URL . 'controller/remove-process.php' ?>",
+                        url: "<?= BASE_URL . 'controller/get-process.php' ?>",
                         method: 'POST',
                         data: {
-                            action: 'remove',
-                            userID: user_id
+                            action: 'find',
+                            data: user_id,
                         },
                         success: function(response) {
+                            var user = response[0];
                             if (response) {
-                                displayUsers();
-                                swal("مخاطب موردنظر با موفقیت حذف شد", "", "success");
+                                $('#fName').val(user.first_name);
+                                $('#lName').val(user.last_name);
+                                $('#faName').val(user.father_name);
+                                $('#number').val(user.phone_number);
+                                // document.getElementById('fName').readOnly = true;
+                                // document.getElementById('lName').readOnly = true;
+                                // document.getElementById('faName').readOnly = true;
+                                // document.getElementById('number').readOnly = true;
+                                document.getElementById('edit').type = 'submit';
+                                document.getElementById('submit').type = 'hidden';
+                                $('.userInfoTab').slideToggle();
                             }
                         }
                     });
+
+
                 });
-            });
+
+
+                $('#removeSelectedUser').click(function(e) {
+                    var user_id = $(this).attr('user-id');
+                    swal('آیا از حذف مخاطب از لیست مطمئن هستید!؟', "با تأئید شما، مخاطب بلافاصله حذف میگردد", "warning");
+                    $('.swal-button--confirm').click(function(e) {
+                        $.ajax({
+                            url: "<?= BASE_URL . 'controller/remove-process.php' ?>",
+                            method: 'POST',
+                            data: {
+                                action: 'remove',
+                                userID: user_id
+                            },
+                            success: function(response) {
+                                if (response) {
+                                    // deleteItems();
+                                    displayUsers();
+                                    swal("مخاطب موردنظر با موفقیت حذف شد", "", "success");
+                                }
+                            }
+                        });
+                    });
+                });
+
+            }
 
 
             $('input#search').keyup(function(e) {
@@ -335,6 +367,9 @@
 
 
             $('#addNewUser').click(function() {
+                document.getElementById('addUserForm').reset();
+                document.getElementById('edit').type = 'hidden';
+                document.getElementById('submit').type = 'submit';
                 $('.userInfoTab').slideToggle();
             });
 
@@ -354,13 +389,26 @@
                         displayUsers();
                         swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
                         $('.userInfoTab').slideToggle();
-                        $('#fName').val('');
-                        $('#lName').val('');
-                        $('#faName').val('');
-                        $('#number').val('');
+                        document.getElementById('addUserForm').reset();
                     }
                 });
             });
+
+            // $('#edit').submit(function(e) {
+            //     e.preventDefault();
+            //     var form = $(this);
+            //     $.ajax({
+            //         url: form.attr('action'),
+            //         method: form.attr('method'),
+            //         data: form.serialize(),
+            //         success: function(response) {
+            //             displayUsers();
+            //             swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
+            //             $('.userInfoTab').slideToggle();
+            //             document.getElementById('addUserForm').reset();
+            //         }
+            //     });
+            // });
 
             $('#sortDESC').click(function(e) {
                 e.preventDefault();
@@ -372,11 +420,10 @@
             });
 
             $('#pagination-space').click(function() {
-                // alert(getGetParam());
-                // alert(pageNum);
-                // e.preventDefault();
                 displayUsers();
             });
+
+
         });
     </script>
 </body>

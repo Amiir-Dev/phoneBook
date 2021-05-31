@@ -18,3 +18,4 @@ $fileName = "{$className}.php";
 if (class_exists($className)) {
     echo (new $className())->$action($params);
 }
+
