@@ -122,9 +122,11 @@
             <form id='addUserForm' action="<?= site_url("controller/add-process.php") ?>" method="post">
                 <div class="field-row">
                     <div class="field-content">
-                        <input type="text" name='f-name' id="fName" placeholder="نام">
-                        <input type="text" name='l-name' id="lName" placeholder="نام خانوادگی">
-                        <input type="text" name='fa-name' id="faName" placeholder="نام پدر">
+                        <input type="text" name='f-name' id="fName" placeholder="نام" required>
+                        <input type="text" name='l-name' id="lName" placeholder="نام خانوادگی" required>
+                        <input type="text" name='fa-name' id="faName" placeholder="نام پدر" required>
+                        <input type="tel" name='phone_number' id="number" placeholder="+مثال:‌ 989123456789" pattern="{+}[0-9]{1,6}[0-9]{4,15}" required style="direction: ltr; width: 200px">
+
                     </div>
                 </div>
 
@@ -173,8 +175,14 @@
 
 
     <script>
+        function getpageNum() {
+            return <?= $_GET['page'] ?>;
+        }
+
+
         function displayUsers(param) {
-            var param = param;
+            var param = [param, getpageNum()];
+            // alert(param[0]);
             $.ajax({
                 url: "<?= BASE_URL . 'controller/get-process.php' ?>",
                 method: 'POST',
@@ -183,6 +191,7 @@
                     data: param,
                 },
                 success: function(response) {
+                    // console.log(response);
                     response.forEach(function(user) {
                         createItems(user)
                     });
@@ -227,13 +236,19 @@
             parenetBottonTDs.appendChild(showProfileBtn);
             parenetBottonTDs.appendChild(deleteBtn);
 
-            // showProfileBtn.onclick = showProfile
-            deleteBtn.onclick = delete
+            showProfileBtn.onclick = showSelectedUser(user.id);
+            deleteBtn.onclick = removeSelectedUser();
 
             parentTd.appendChild(parenetBottonTDs);
 
             thead.appendChild(parentTd);
         }
+
+        function showSelectedUser(e) {
+            // console.log(e);
+        }
+
+        function removeSelectedUser() {};
 
 
         // ---> Paginations Functions
@@ -243,9 +258,7 @@
                 method: 'POST',
                 data: '',
                 success: function(response) {
-                    // console.log(response);
                     for (page = 1; page <= response; page++) {
-                        // console.log(page);
                         createPagination(page);
                     };
                 }
@@ -267,31 +280,21 @@
             pageNumberSpace.appendChild(PageNumberBtn);
         }
 
-        // function showProfile(event) {
 
-        // }
 
-        // function showProfile(event){
+        // -------------- Document Ready ---------------
+        $(document).ready(function(event) {
 
-        // }
-
-        $(document).ready(function() {
-
-            $('.showUserProfile').click(function() {
+            $('.showUserProfile').click(function(e) {
+                alert("showUserProfile")
+                $('#fName').val();
                 $('.userInfoTab').slideToggle();
 
-                // var First_Name = $('#fname-list');
-                // var Last_Name = $('#lname-list');
-
-                // $('input#f-name').val(First_Name);
-                // $('input#l-name').val(Last_Name);
             });
 
-            document.getElementsByClassName('deleteUserProfile')[0];
-            $().click(function(e) {
-                alert("yes");
-                var user_id = $(this).attr('user-id');
-                // var user_name = $(this).innerHTML();
+            $('.deleteUserProfile').click(function(e) {
+                alert("deleteUserProfile");
+                // var user_id = $(this).attr('user-id');
                 swal('آیا از حذف «' + user_name + '» از لیست مخاطبین مطمئن هستید!؟', "با تأئید شما، مخاطب بلافاصله حذف میگردد", "warning");
                 $('.swal-button--confirm').click(function(e) {
                     $.ajax({
@@ -335,7 +338,6 @@
                 $('.userInfoTab').slideToggle();
             });
 
-
             $('input#cancelClose').click(function(e) {
                 $('.userInfoTab').slideToggle();
             });
@@ -352,6 +354,10 @@
                         displayUsers();
                         swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
                         $('.userInfoTab').slideToggle();
+                        $('#fName').val('');
+                        $('#lName').val('');
+                        $('#faName').val('');
+                        $('#number').val('');
                     }
                 });
             });
@@ -365,13 +371,12 @@
                 displayUsers("ASC");
             });
 
-            $('#pagination-space').click(function(e) {
-                let params = window.location.search;
+            $('#pagination-space').click(function() {
+                // alert(getGetParam());
+                // alert(pageNum);
                 // e.preventDefault();
-                // console.log(params);
-                displayUsers(params);
+                displayUsers();
             });
-
         });
     </script>
 </body>

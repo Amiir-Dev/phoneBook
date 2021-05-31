@@ -7,7 +7,7 @@ class addUser extends user
     private $firstName;
     private $lastName;
     private $fatherName;
-    private $numbers;
+    private $phone_number;
 
     private $userData;
     private $userId;
@@ -17,14 +17,14 @@ class addUser extends user
         $this->firstName = $params['f-name'];
         $this->lastName = $params['l-name'];
         $this->fatherName = $params['fa-name'];
+        $this->phone_number = $params['phone_number'];
 
-        $db = "INSERT INTO users (first_name, last_name, father_name) VALUES (:first_name, :last_name, :father_name)";
+        $db = "INSERT INTO users (first_name, last_name, father_name, phone_number) VALUES (:first_name, :last_name, :father_name, :phone_number)";
         $stmt = ($this->conn)->prepare($db);
-        $stmt->execute(['first_name'=>$this->firstName, 'last_name'=>$this->lastName, 'father_name'=>$this->fatherName]);
+        $stmt->execute(['first_name'=>$this->firstName, 'last_name'=>$this->lastName, 'father_name'=>$this->fatherName, ':phone_number'=>$this->phone_number]);
         $this->userId = $this->conn->lastInsertId();
 
-        # Add Numbers Into Databse
-
+        # TODO (Add Numbers Into Databse)
         $this->userData = (object)["id" => $this->userId, "first_name" => $this->firstName, "last_name" => $this->lastName];
         
         return true; 

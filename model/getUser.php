@@ -24,22 +24,19 @@ class getUser extends user
 
     public function get($params)
     {
-        
+
         #set default
         $this->order = "created_at DESC";
 
-        if (in_array($params['data'], ["ASC", "DESC"])) {
+        if (in_array($params[0], ["ASC", "DESC"])) {
             $this->orderBy = $params['data'];
 
             if (isset($this->orderBy)) {
                 $this->order = "last_name $this->orderBy";
             }
         }
-        // echo $params['data'];
-        $p = explode("?page=",$params['data']);
-        // $this->page = is_numeric($params['data']) ? $params['data'] : 1;
-        // $this->page = is_numeric($p[0]) ? $p[0] : 1;
-        $this->page = 3;
+        $this->page = is_numeric($params[1]) ? $params[1] : 1;
+        // $this->page = 1;
 
         $this->numPage = ((int) $this->page * TASK_EVERY_PAGE) - TASK_EVERY_PAGE;
 
