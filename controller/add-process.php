@@ -7,8 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 include BASE_PATH . 'autoload.php';
 
-$action = "add";
 $params = $_POST;
+
+is_numeric($params['thisUser-ID']) ? $action = "update" : $action = "add";
 
 if (!isset($params) or empty($params)) {
     die("پرکردن تمامی فیلدها الزامی است!");

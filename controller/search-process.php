@@ -27,9 +27,9 @@ if (!sizeof($result)) {
 }
 
 foreach ($result as $res) {
-    echo "<a href='#'>
+    echo "<a>
     <div class='result-item' user_id='$res->id'>
-    <span class='user-title'> $res->first_name $res->last_name</span>
+    <span id = 'search_result' class='user-title'> $res->first_name $res->last_name</span>
     </div>
     </a>";
 }

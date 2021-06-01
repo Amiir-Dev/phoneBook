@@ -124,6 +124,7 @@
             <form id='addUserForm' action="<?= site_url("controller/add-process.php") ?>" method="post">
                 <div class="field-row">
                     <div class="field-content">
+                        <input type="hidden" name='thisUser-ID' id="thisUserID"  readonly>
                         <input type="text" name='f-name' id="fName" placeholder="نام" required>
                         <input type="text" name='l-name' id="lName" placeholder="نام خانوادگی" required>
                         <input type="text" name='fa-name' id="faName" placeholder="نام پدر" required>
@@ -134,10 +135,9 @@
 
                 <div class="field-row">
                     <div class="field-content">
-                        <input type="hiden" id="submit" value=" ثبت " d: visible>
-                        <input type="cancel" id="cancelClose" readonly value="انصراف">
+                        <input type="hiden" id="submit" value=" ثبت ">
                         <input type="hidden" id="edit" readonly value="ویرایش">
-
+                        <input type="cancel" id="cancelClose" readonly value="انصراف">
                     </div>
                 </div>
 
@@ -290,9 +290,8 @@
         $(document).ready(function(event) {
 
             window.onload = function() {
-                $('#showUserProfile').click(function(e) {
+                $('#showUserProfile, span#search_result').click(function(e) {
                     var user_id = $(this).attr('user-id');
-                    // $('.userInfoTab').slideToggle();
                     $.ajax({
                         url: "<?= BASE_URL . 'controller/get-process.php' ?>",
                         method: 'POST',
@@ -307,6 +306,7 @@
                                 $('#lName').val(user.last_name);
                                 $('#faName').val(user.father_name);
                                 $('#number').val(user.phone_number);
+                                $('#thisUserID').val(user.id);
                                 // document.getElementById('fName').readOnly = true;
                                 // document.getElementById('lName').readOnly = true;
                                 // document.getElementById('faName').readOnly = true;
@@ -370,6 +370,7 @@
                 document.getElementById('addUserForm').reset();
                 document.getElementById('edit').type = 'hidden';
                 document.getElementById('submit').type = 'submit';
+                $('#thisUserID').val('');
                 $('.userInfoTab').slideToggle();
             });
 
@@ -387,28 +388,12 @@
                     data: form.serialize(),
                     success: function(response) {
                         displayUsers();
-                        swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
+                        swal("عملیات باموفقیت انجام شد", "", "success");
                         $('.userInfoTab').slideToggle();
                         document.getElementById('addUserForm').reset();
                     }
                 });
             });
-
-            // $('#edit').submit(function(e) {
-            //     e.preventDefault();
-            //     var form = $(this);
-            //     $.ajax({
-            //         url: form.attr('action'),
-            //         method: form.attr('method'),
-            //         data: form.serialize(),
-            //         success: function(response) {
-            //             displayUsers();
-            //             swal("مخاطب موردنظر با موفقیت افزوده شد", "", "success");
-            //             $('.userInfoTab').slideToggle();
-            //             document.getElementById('addUserForm').reset();
-            //         }
-            //     });
-            // });
 
             $('#sortDESC').click(function(e) {
                 e.preventDefault();
